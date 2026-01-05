@@ -1,0 +1,18 @@
+Package: DecelR
+Title: Acceleration to Deceleration Performance Analysis Tools
+Version: 0.0.0.9000
+Authors@R: 
+    person("Nico", "Philipp", , "nicophilipp10@gmail.com", role = c("aut", "cre"))
+Description: Tools for analyzing horizontal deceleration performance in sport and
+    human movement data. The package provides methods for filtering time-series
+    velocity data, identifying deceleration phase boundaries using peak velocity
+    or acceleration-based thresholds, computing key performance metrics, and
+    visualizing speed-time and speed-position curves. A Shiny application is
+    included for interactive data exploration. Currently, the package works best
+    for acceleration to deceleration assessments. In the future, we hope to add
+    other assessments such as those including a reacceleration following a
+    directional change.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
