@@ -4,3 +4,5 @@
 .httr-oauth
 .DS_Store
 .quarto
+restart.R
+push_git_hub.R
