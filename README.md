@@ -7,11 +7,11 @@
 <!-- badges: end -->
 
 **DecelR** is an R package for sport scientists to analyze deceleration
-and change-of-direction (COD) performance from time–speed data, the
-Acceleration-to-Deceleration Assessment (ADA).
+performance from time–speed data, the Acceleration-to-Deceleration
+Assessment (ADA).
 
 The package derives acceleration directly from filtered speed-time data
-(dv/dt), avoiding reliance on device-reported acceleration.
+(dv/dt).
 
 ------------------------------------------------------------------------
 
