@@ -1,6 +1,8 @@
 
 # DecelR
 
+<img src="man/figures/logo.png" align="right" width="180" />
+
 <!-- badges: start -->
 <!-- badges: end -->
 
