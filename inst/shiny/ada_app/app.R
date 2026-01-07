@@ -36,7 +36,12 @@ ui <- fluidPage(
         tabPanel("Plot",
                  uiOutput("plot_ui")
         ),
-        tabPanel("Metrics", DTOutput("metrics")),
+        tabPanel(
+          "Metrics",
+          downloadButton("download_metrics", "Download metrics (CSV)"),
+          br(), br(),
+          DTOutput("metrics")
+        ),
         tabPanel("Preview Data", DTOutput("preview"))
       )
     )
@@ -128,6 +133,17 @@ server <- function(input, output, session) {
     tbl <- data.frame(Metric = names(metrics), Value = t(metrics), row.names = NULL)
     datatable(tbl, options = list(dom = "t", scrollY = TRUE, pageLength = nrow(tbl)))
   })
+
+  output$download_metrics <- downloadHandler(
+    filename = function() {
+      paste0("DecelR_ADA_metrics_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".csv")
+    },
+    content = function(file) {
+      res <- results()
+      req(res)
+      readr::write_csv(res$metrics, file)
+    }
+  )
 }
 
 shinyApp(ui, server)
