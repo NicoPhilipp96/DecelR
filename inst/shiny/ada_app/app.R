@@ -16,33 +16,89 @@ library(DecelR)
 
 ui <- fluidPage(
   titlePanel("DecelR – Acceleration to Deceleration Assessment"),
+
   sidebarLayout(
     sidebarPanel(
-      fileInput("file", "Upload CSV (time, speed; position/force optional)", accept = ".csv"),
+
+      ## ---- Data source selection ----
+      radioButtons(
+        "data_source",
+        "Data source",
+        choices = c(
+          "Upload CSV" = "csv",
+          "Use data frame from R session" = "env"
+        ),
+        inline = TRUE
+      ),
+
+      ## ---- CSV upload ----
+      conditionalPanel(
+        condition = "input.data_source == 'csv'",
+        fileInput(
+          "file",
+          "Upload CSV (time, speed; position/force optional)",
+          accept = ".csv"
+        )
+      ),
+
+      ## ---- GlobalEnv data frame picker ----
+      conditionalPanel(
+        condition = "input.data_source == 'env'",
+        selectInput(
+          "env_df",
+          "Choose a data frame",
+          choices = NULL
+        ),
+        actionButton("refresh_env", "Refresh list")
+      ),
+
       tags$hr(),
+
+      ## ---- Analysis controls ----
       numericInput("cutoff", "Butterworth cutoff (Hz)", value = 3, min = 0.1, step = 0.1),
       numericInput("order", "Butterworth order", value = 2, min = 1, step = 1),
-      selectInput("start_method", "Start of decel threshold",
-                  choices = c("Derived acceleration ≤ threshold" = "acc_threshold",
-                              "Peak speed" = "peak_speed")),
+
+      selectInput(
+        "start_method",
+        "Start of decel threshold",
+        choices = c(
+          "Derived acceleration ≤ threshold" = "acc_threshold",
+          "Peak speed" = "peak_speed"
+        )
+      ),
+
       numericInput("acc_thr", "Derived acceleration threshold (m/s²)", value = -1.5, step = 0.1),
       numericInput("stop_speed", "End-of-decel speed (m/s)", value = 0.2, min = 0, step = 0.05),
       numericInput("trim_speed", "Trim standing speed (m/s)", value = 0.5, min = 0, step = 0.05),
-      selectInput("xaxis", "Plot X-axis", choices = c("Time", "Position", "Both"), selected = "Time"),
+
+      selectInput(
+        "xaxis",
+        "Plot X-axis",
+        choices = c("Time", "Position", "Both"),
+        selected = "Time"
+      ),
+
       actionButton("analyze", "Analyze", class = "btn-primary")
     ),
+
     mainPanel(
       tabsetPanel(
-        tabPanel("Plot",
-                 uiOutput("plot_ui")
+        tabPanel(
+          "Plot",
+          uiOutput("plot_ui")
         ),
+
         tabPanel(
           "Metrics",
           downloadButton("download_metrics", "Download metrics (CSV)"),
           br(), br(),
           DTOutput("metrics")
         ),
-        tabPanel("Preview Data", DTOutput("preview"))
+
+        tabPanel(
+          "Preview Data",
+          DTOutput("preview")
+        )
       )
     )
   )
@@ -50,9 +106,45 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
+  observeEvent(
+    c(input$data_source, input$refresh_env),
+    {
+      req(input$data_source)
+      if (input$data_source != "env") return()
+
+      objs <- ls(envir = .GlobalEnv)
+
+      is_df <- vapply(
+        objs,
+        function(nm) inherits(
+          get(nm, envir = .GlobalEnv),
+          c("data.frame", "tbl_df")
+        ),
+        logical(1)
+      )
+
+      choices <- objs[is_df]
+
+      updateSelectInput(
+        session,
+        "env_df",
+        choices = choices,
+        selected = if (length(choices)) choices[1] else character(0)
+      )
+    },
+    ignoreInit = TRUE
+  )
+
   raw_df <- reactive({
-    req(input$file)
-    readr::read_csv(input$file$datapath, show_col_types = FALSE)
+    req(input$data_source)
+
+    if (input$data_source == "csv") {
+      req(input$file)
+      readr::read_csv(input$file$datapath, show_col_types = FALSE)
+    } else {
+      req(input$env_df)
+      get(input$env_df, envir = .GlobalEnv)
+    }
   })
 
   output$preview <- renderDT({
