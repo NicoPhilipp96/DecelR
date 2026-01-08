@@ -25,3 +25,20 @@ remotes::install_github("NicoPhilipp96/DecelR")
 library(DecelR)
 run_ada_app()
 ```
+
+------------------------------------------------------------------------
+
+## Relevant References
+
+1.  Harper, D. J., Morin, J.-B., Carling, C., & Kiely, J. (2020).
+    Measuring maximal horizontal deceleration ability using radar
+    technology: reliability and sensitivity of kinematic and kinetic
+    variables. Sports Biomechanics / International Society of
+    Biomechanics in Sports, 1–17.
+
+2.  West, M. A., Compton, H. R., Dascombe, B. J., & Secomb, J. L.
+    (2025). Introducing the novel deceleration threshold method:
+    Comparative reliability to previous sprint deceleration analysis
+    methods in team-sport athletes. European Journal of Sport Science:
+    EJSS: Official Journal of the European College of Sport Science,
+    25(4), e12278.
