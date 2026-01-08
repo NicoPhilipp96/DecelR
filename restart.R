@@ -36,13 +36,11 @@ res$plot_pos
 
 ################################################################################
 ################################################################################
-#initialize git
+devtools::install()
 
-usethis::use_git()
+file.edit("inst/shiny/ada_app/app.R")
+any(grepl("SOURCE_APP_FILE_CONFIRMED",
+          readLines("inst/shiny/ada_app/app.R")))
 
-usethis::use_git()
-# then stage + commit:
-# (RStudio Git pane works great)
-
-
-
+library(DecelR)
+run_ada_app()
