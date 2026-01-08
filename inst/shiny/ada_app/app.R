@@ -106,34 +106,30 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-  observeEvent(
-    c(input$data_source, input$refresh_env),
-    {
-      req(input$data_source)
-      if (input$data_source != "env") return()
+  observeEvent(c(input$data_source, input$refresh_env), {
+    req(input$data_source)
+    if (input$data_source != "env") return()
 
-      objs <- ls(envir = .GlobalEnv)
+    objs <- base::ls(envir = .GlobalEnv)
 
-      is_df <- vapply(
-        objs,
-        function(nm) inherits(
-          get(nm, envir = .GlobalEnv),
-          c("data.frame", "tbl_df")
-        ),
-        logical(1)
-      )
+    vals <- base::mget(
+      objs,
+      envir = .GlobalEnv,
+      ifnotfound = list(NULL)
+    )
 
-      choices <- objs[is_df]
+    is_df <- vapply(vals, function(x) {
+      inherits(x, c("data.frame", "tbl_df"))
+    }, logical(1))
 
-      updateSelectInput(
-        session,
-        "env_df",
-        choices = choices,
-        selected = if (length(choices)) choices[1] else character(0)
-      )
-    },
-    ignoreInit = TRUE
-  )
+    choices <- names(vals)[is_df]
+
+    shiny::updateSelectInput(
+      session, "env_df",
+      choices = choices,
+      selected = if (length(choices)) choices[1] else character(0)
+    )
+  }, ignoreInit = TRUE)
 
   raw_df <- reactive({
     req(input$data_source)
@@ -143,7 +139,7 @@ server <- function(input, output, session) {
       readr::read_csv(input$file$datapath, show_col_types = FALSE)
     } else {
       req(input$env_df)
-      get(input$env_df, envir = .GlobalEnv)
+      base::mget(input$env_df, envir = .GlobalEnv, inherits = TRUE)[[1]]
     }
   })
 
@@ -239,3 +235,4 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+
