@@ -36,7 +36,13 @@ run_ada_app()
     variables. Sports Biomechanics / International Society of
     Biomechanics in Sports, 1–17.
 
-2.  West, M. A., Compton, H. R., Dascombe, B. J., & Secomb, J. L.
+2.  Harper, D. J., Philipp, N. M., Eriksrud, O., Jones, P. A.,
+    Graham-Smith, P., & Dos’Santos, T. (2025). Assessing deceleration
+    performance: Methodological and practical considerations. Sports
+    Medicine (Auckland, N.Z.).
+    <https://doi.org/10.1007/s40279-025-02339-7>
+
+3.  West, M. A., Compton, H. R., Dascombe, B. J., & Secomb, J. L.
     (2025). Introducing the novel deceleration threshold method:
     Comparative reliability to previous sprint deceleration analysis
     methods in team-sport athletes. European Journal of Sport Science:
